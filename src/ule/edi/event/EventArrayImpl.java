@@ -149,7 +149,7 @@ public class EventArrayImpl implements Event {
 			else {
 				type=Type.NORMAL;
 			}
-			//this.seats[pos-1]= new Seat(Event.super., pos-1, type, p);
+			this.seats[pos-1]= new Seat(this , pos-1, type, p);
 		}
 		return free;
 	}
@@ -157,46 +157,102 @@ public class EventArrayImpl implements Event {
 
 	@Override
 	public int getNumberOfAttendingChildren() {
-		return 0;
+		int childCounter=0;
+		for (int i=0; i<nSeats; i++) {
+			if (!(seats[i]==null)) {
+				if(seats[i].getHolder().getAge()<Configuration.CHILDREN_EXMAX_AGE) {
+					childCounter++;
+				}
+			}
+		}
+		return childCounter;
 	}
 
 
 	@Override
 	public int getNumberOfAttendingAdults() {
-		return 0;
+		int adultCounter=0;
+		for (int i=0; i<nSeats; i++) {
+			if (!(seats[i]==null)) {
+				if(seats[i].getHolder().getAge()>=Configuration.CHILDREN_EXMAX_AGE && 
+						seats[i].getHolder().getAge()<Configuration.ELDERLY_PERSON_INMIN_AGE) {
+					adultCounter++;
+				}
+			}
+		}
+		return adultCounter;
 	}
 
 
 	@Override
 	public int getNumberOfAttendingElderlyPeople() {
-		return 0;
+		int elderyCounter=0;
+		for (int i=0; i<nSeats; i++) {
+			if (!(seats[i]==null)) {
+				if(seats[i].getHolder().getAge()>=Configuration.ELDERLY_PERSON_INMIN_AGE) {
+					elderyCounter++;
+				}
+			}
+		}
+		return elderyCounter;
 	}
 
 
 	@Override
 	public List<Integer> getAvailableSeatsList() {
-		return null;
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i=0; i<nSeats; i++) {
+			if(this.seats[i]==null) {
+				list.add(i+1);
+			}
+		}
+		return list;
 	}
 
 
 	@Override
 	public List<Integer> getAdvanceSaleSeatsList() {
-		return null;
+		List<Integer> list = new ArrayList<Integer>();
+		Type advanceSale= Type.ADVANCE_SALE;
+		for (int i=0; i<nSeats; i++) {
+			if(!(this.seats[i]==null)) {
+				if(this.seats[i].getType()==advanceSale)
+					list.add(i+1);
+			}
+		}
+		return list;
 	}
 
 
 	@Override
 	public int getMaxNumberConsecutiveSeats() {
-		return 0;
+		int consecutiveCounter=0;
+		int maxConsecutive=0;
+		for(int i=0; i<nSeats; i++) {
+			if(this.seats[i]==null) {
+				consecutiveCounter++;
+			}
+			else {
+				if(consecutiveCounter>maxConsecutive) {
+					maxConsecutive=consecutiveCounter;
+				}
+				consecutiveCounter=0;
+			}
+		}
+		return maxConsecutive;
 	}
 
 
 	@Override
 	public Double getPrice(Seat seat) {
+		Type advaceSale= Type.ADVANCE_SALE;
 		if(seat==null) {
 			return 0.0;
 		}
 		else {
+			if(seat.getType()==advaceSale) {
+				this.price=getPrice()-Configuration.DEFAULT_DISCOUNT;
+			}
 			return this.getPrice();
 		}
 	}
@@ -204,7 +260,13 @@ public class EventArrayImpl implements Event {
 
 	@Override
 	public Double getCollectionEvent() {
-		return null;
+		double collection=0.0;
+		for(int i=0; i<nSeats; i++) {
+			if(this.seats[i]!=null) {
+				collection+= this.getPrice(this.seats[i]);
+			}
+		}
+		return collection;
 	}
 
 
