@@ -46,160 +46,179 @@ public class EventArrayImpl implements Event {
 		this.discountAdvanceSale=discount;
 	}
 
-
+//.
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.name;
 	}
 
-
+//?
 	@Override
 	public Date getDateEvent() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eventDate;
 	}
 
 
 	@Override
 	public Double getPrice() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.price;
 	}
 
 
 	@Override
 	public Byte getDiscountAdvanceSale() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.discountAdvanceSale;
 	}
 
 
 	@Override
 	public int getNumberOfSoldSeats() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (this.getNumberOfSeats()-this.getNumberOfAvailableSeats());
 	}
 
 
 	@Override
 	public int getNumberOfNormalSaleSeats() {
-		// TODO Auto-generated method stub
-		return 0;
+		int normalCounter=0;
+		for (int i=0; i<this.nSeats; i++) {
+			if (this.seats[i]==null) {
+			}
+			else if(isAdvanceSale(seats[i].getHolder())) {
+			}
+			else {
+				normalCounter++;
+			}
+		}
+		return normalCounter;
 	}
 
 
 	@Override
 	public int getNumberOfAdvanceSaleSeats() {
-		// TODO Auto-generated method stub
-		return 0;
+		return (this.getNumberOfSoldSeats()-this.getNumberOfNormalSaleSeats());
 	}
 
 
 	@Override
 	public int getNumberOfSeats() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.nSeats;
 	}
 
-
+//
 	@Override
 	public int getNumberOfAvailableSeats() {
-		// TODO Auto-generated method stub
-		return 0;
+		int availableCounter=0;
+		for (int i=0;i<this.nSeats; i++) {
+			if(seats[i]==null) {
+				availableCounter++;
+			}
+		}
+		return availableCounter;
 	}
 
 
 	@Override
 	public Seat getSeat(int pos) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.seats[pos-1];
 	}
 
 
 	@Override
 	public Person refundSeat(int pos) {
-		// TODO Auto-generated method stub
-		return null;
+		Person p;
+		if(seats[pos-1]==null) {
+			return null;
+		}
+		else {
+			p=this.seats[pos-1].getHolder();
+			seats[pos-1]=null;
+			return p;
+		}
 	}
 
 
 	@Override
 	public boolean sellSeat(int pos, Person p, boolean advanceSale) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean free=false;
+		if (!(this.seats[pos-1]== null)) {
+			free=true;
+			Type type;
+			if(advanceSale) {
+				type=Type.ADVANCE_SALE;
+			}
+			else {
+				type=Type.NORMAL;
+			}
+			//this.seats[pos-1]= new Seat(Event.super., pos-1, type, p);
+		}
+		return free;
 	}
 
 
 	@Override
 	public int getNumberOfAttendingChildren() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
 	public int getNumberOfAttendingAdults() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
 	public int getNumberOfAttendingElderlyPeople() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
 	public List<Integer> getAvailableSeatsList() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
 	public List<Integer> getAdvanceSaleSeatsList() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
 	public int getMaxNumberConsecutiveSeats() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
 	public Double getPrice(Seat seat) {
-		// TODO Auto-generated method stub
-		return null;
+		if(seat==null) {
+			return 0.0;
+		}
+		else {
+			return this.getPrice();
+		}
 	}
 
 
 	@Override
 	public Double getCollectionEvent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
 	public int getPosPerson(Person p) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 
 	@Override
 	public boolean isAdvanceSale(Person p) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean sale=false;
+		//revisar
+		return sale;
 	}
-
-
 
 }	
