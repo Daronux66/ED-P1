@@ -272,15 +272,26 @@ public class EventArrayImpl implements Event {
 
 	@Override
 	public int getPosPerson(Person p) {
-		return 0;
+		for(int i=0; i<nSeats; i++) {
+			if(this.seats[i]!=null) {
+				if(this.seats[i].getHolder().equals(p)) {
+					return i+1;
+				}
+			}
+		}
+		return -1;
 	}
 
 
 	@Override
 	public boolean isAdvanceSale(Person p) {
-		boolean sale=false;
-		//revisar
-		return sale;
+		boolean advancedSale=false;
+		int posP = this.getPosPerson(p);
+		Type type = this.getSeat(posP).getType();
+		if (type== Type.ADVANCE_SALE) {
+			advancedSale=true;
+		}
+		return advancedSale;
 	}
 
 }	
