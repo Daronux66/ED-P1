@@ -31,7 +31,6 @@ public class EventArrayImplTests {
 	
 	@Test
 	public void testEventoVacio() throws Exception {
-		
 	    Assert.assertTrue(e.getNumberOfAvailableSeats()==110);
 	    Assert.assertEquals(e.getNumberOfAvailableSeats(), 110);
 	    Assert.assertEquals(e.getNumberOfAttendingAdults(), 0);
