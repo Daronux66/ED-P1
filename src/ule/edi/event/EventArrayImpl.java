@@ -186,7 +186,7 @@ public class EventArrayImpl implements Event {
 	public int getNumberOfAttendingElderlyPeople() {
 		int elderyCounter=0;
 		for (int i=0; i<this.seats.length; i++) {
-			if (!(seats[i]==null)) {
+			if (seats[i]!=null) {
 				if(seats[i].getHolder().getAge()>=Configuration.ELDERLY_PERSON_INMIN_AGE) {
 					elderyCounter++;
 				}
