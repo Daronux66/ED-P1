@@ -293,6 +293,11 @@ public class EventArrayImplTests {
 		Person kupina = new Person("22222040A","Kupina", 14);
 		Person potito = new Person("33333040A","Potito", 65);
 		Assert.assertEquals(false, kupina.equals(potito));
-
+	}
+	
+	@Test
+	public void testNotEqualObject() {
+		Person kupina = new Person("22222040A","Kupina", 14);
+		Assert.assertEquals(false, kupina.equals(e));
 	}
 }

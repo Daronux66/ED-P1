@@ -48,13 +48,11 @@ public class EventArrayImpl implements Event {
 		this.discountAdvanceSale=discount;
 	}
 
-//.
 	@Override
 	public String getName() {
 		return this.name;
 	}
 
-//?
 	@Override
 	public Date getDateEvent() {
 		return this.eventDate;
