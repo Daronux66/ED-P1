@@ -279,4 +279,20 @@ public class EventArrayImplTests {
 		e.sellSeat(20, new Person("11111040A","Rober", 68), false);
 		Assert.assertFalse(e.isAdvanceSale(alice));
 	}
+	
+	@Test
+	public void testEqualsPerson() {
+		Person kupina = new Person("22222040A","Kupina", 14);
+		Person kupinaClone = new Person("22222040A","Kupina", 14);
+		Assert.assertEquals(true, kupina.equals(kupinaClone));
+
+	}
+	
+	@Test
+	public void testNotEqualsPerson() {
+		Person kupina = new Person("22222040A","Kupina", 14);
+		Person potito = new Person("33333040A","Potito", 65);
+		Assert.assertEquals(false, kupina.equals(potito));
+
+	}
 }
