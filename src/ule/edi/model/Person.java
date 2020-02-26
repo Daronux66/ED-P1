@@ -46,7 +46,7 @@ public class Person {
 	
     public boolean equals(Person person) {
 		// Dos personas son iguales si son iguales sus nifs
-    	if (this.nif==person.getNif()) {
+    	if (this.nif.equals(person.getNif())) {
     		return true;
     	}
     	else {

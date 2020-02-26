@@ -30,6 +30,7 @@ public class EventArrayImpl implements Event {
 		// Debe crear el array de butacas
 		this.name=name;
 		this.eventDate=date;
+		this.nSeats=nSeats;
 		this.seats= new Seat[nSeats];
 		this.price=Configuration.DEFAULT_PRICE;
 		this.discountAdvanceSale=Configuration.DEFAULT_DISCOUNT;
@@ -41,6 +42,7 @@ public class EventArrayImpl implements Event {
 		// Debe crear el array de butacas
 		this.name=name;
 		this.eventDate=date;
+		this.nSeats=nSeats;
 		this.seats= new Seat[nSeats];
 		this.price=price;
 		this.discountAdvanceSale=discount;
@@ -80,13 +82,11 @@ public class EventArrayImpl implements Event {
 	@Override
 	public int getNumberOfNormalSaleSeats() {
 		int normalCounter=0;
-		for (int i=0; i<this.nSeats; i++) {
-			if (this.seats[i]==null) {
-			}
-			else if(isAdvanceSale(seats[i].getHolder())) {
-			}
-			else {
-				normalCounter++;
+		for (int i=0; i<this.seats.length; i++) {
+			if (this.seats[i]!=null) {
+				if(this.seats[i].getType()==Type.NORMAL){
+					normalCounter++;
+				}
 			}
 		}
 		return normalCounter;
@@ -104,12 +104,11 @@ public class EventArrayImpl implements Event {
 		return this.nSeats;
 	}
 
-//
 	@Override
 	public int getNumberOfAvailableSeats() {
 		int availableCounter=0;
-		for (int i=0;i<this.nSeats; i++) {
-			if(seats[i]==null) {
+		for (int i=0;i<this.seats.length; i++) {
+			if(this.seats[i]==null) {
 				availableCounter++;
 			}
 		}
@@ -140,16 +139,15 @@ public class EventArrayImpl implements Event {
 	@Override
 	public boolean sellSeat(int pos, Person p, boolean advanceSale) {
 		boolean free=false;
-		if (!(this.seats[pos-1]== null)) {
+		int arraypos=(pos-1);
+		if (this.seats[arraypos]== null) {
 			free=true;
-			Type type;
 			if(advanceSale) {
-				type=Type.ADVANCE_SALE;
+				this.seats[arraypos]= new Seat(this , pos, Type.ADVANCE_SALE, p);
 			}
 			else {
-				type=Type.NORMAL;
+				this.seats[arraypos]= new Seat(this , pos, Type.NORMAL, p);
 			}
-			this.seats[pos-1]= new Seat(this , pos-1, type, p);
 		}
 		return free;
 	}
@@ -158,8 +156,8 @@ public class EventArrayImpl implements Event {
 	@Override
 	public int getNumberOfAttendingChildren() {
 		int childCounter=0;
-		for (int i=0; i<nSeats; i++) {
-			if (!(seats[i]==null)) {
+		for (int i=0; i<this.seats.length; i++) {
+			if (seats[i]!=null) {
 				if(seats[i].getHolder().getAge()<Configuration.CHILDREN_EXMAX_AGE) {
 					childCounter++;
 				}
@@ -172,10 +170,10 @@ public class EventArrayImpl implements Event {
 	@Override
 	public int getNumberOfAttendingAdults() {
 		int adultCounter=0;
-		for (int i=0; i<nSeats; i++) {
-			if (!(seats[i]==null)) {
-				if(seats[i].getHolder().getAge()>=Configuration.CHILDREN_EXMAX_AGE && 
-						seats[i].getHolder().getAge()<Configuration.ELDERLY_PERSON_INMIN_AGE) {
+		for (int i=0; i<this.seats.length; i++) {
+			if (this.seats[i]!=null) {
+				if((this.seats[i].getHolder().getAge())>=Configuration.CHILDREN_EXMAX_AGE && 
+						(this.seats[i].getHolder().getAge())<Configuration.ELDERLY_PERSON_INMIN_AGE) {
 					adultCounter++;
 				}
 			}
@@ -187,7 +185,7 @@ public class EventArrayImpl implements Event {
 	@Override
 	public int getNumberOfAttendingElderlyPeople() {
 		int elderyCounter=0;
-		for (int i=0; i<nSeats; i++) {
+		for (int i=0; i<this.seats.length; i++) {
 			if (!(seats[i]==null)) {
 				if(seats[i].getHolder().getAge()>=Configuration.ELDERLY_PERSON_INMIN_AGE) {
 					elderyCounter++;
@@ -201,7 +199,7 @@ public class EventArrayImpl implements Event {
 	@Override
 	public List<Integer> getAvailableSeatsList() {
 		List<Integer> list = new ArrayList<Integer>();
-		for (int i=0; i<nSeats; i++) {
+		for (int i=0; i<this.seats.length; i++) {
 			if(this.seats[i]==null) {
 				list.add(i+1);
 			}
@@ -214,8 +212,8 @@ public class EventArrayImpl implements Event {
 	public List<Integer> getAdvanceSaleSeatsList() {
 		List<Integer> list = new ArrayList<Integer>();
 		Type advanceSale= Type.ADVANCE_SALE;
-		for (int i=0; i<nSeats; i++) {
-			if(!(this.seats[i]==null)) {
+		for (int i=0; i<this.seats.length; i++) {
+			if(this.seats[i]!=null) {
 				if(this.seats[i].getType()==advanceSale)
 					list.add(i+1);
 			}
@@ -228,7 +226,7 @@ public class EventArrayImpl implements Event {
 	public int getMaxNumberConsecutiveSeats() {
 		int consecutiveCounter=0;
 		int maxConsecutive=0;
-		for(int i=0; i<nSeats; i++) {
+		for(int i=0; i<this.seats.length; i++) {
 			if(this.seats[i]==null) {
 				consecutiveCounter++;
 			}
@@ -246,14 +244,15 @@ public class EventArrayImpl implements Event {
 	@Override
 	public Double getPrice(Seat seat) {
 		Type advaceSale= Type.ADVANCE_SALE;
+		Double price=this.price;
 		if(seat==null) {
 			return 0.0;
 		}
 		else {
 			if(seat.getType()==advaceSale) {
-				this.price=getPrice()-Configuration.DEFAULT_DISCOUNT;
+				price=this.getPrice()-this.discountAdvanceSale;
 			}
-			return this.getPrice();
+			return price;
 		}
 	}
 
@@ -261,7 +260,7 @@ public class EventArrayImpl implements Event {
 	@Override
 	public Double getCollectionEvent() {
 		double collection=0.0;
-		for(int i=0; i<nSeats; i++) {
+		for(int i=0; i<this.seats.length; i++) {
 			if(this.seats[i]!=null) {
 				collection+= this.getPrice(this.seats[i]);
 			}
@@ -272,14 +271,16 @@ public class EventArrayImpl implements Event {
 
 	@Override
 	public int getPosPerson(Person p) {
-		for(int i=0; i<nSeats; i++) {
+		int posP=-1;
+		for(int i=0; i<this.seats.length; i++) {
 			if(this.seats[i]!=null) {
 				if(this.seats[i].getHolder().equals(p)) {
-					return i+1;
+					posP = i+1;
+					i=this.seats.length;	//Acabar con el for porque solo pilla la primera persona que coincida
 				}
 			}
 		}
-		return -1;
+		return posP;
 	}
 
 
